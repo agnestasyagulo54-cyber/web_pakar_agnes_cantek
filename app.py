@@ -109,6 +109,10 @@ st.markdown("""
 if "history" not in st.session_state:
     st.session_state.history = []
 
+# Inisialisasi flag clear untuk mereset tampilan
+if "clear_flag" not in st.session_state:
+    st.session_state.clear_flag = False
+
 # ====== DATA GEJALA (Basis Pengetahuan - CF Pakar) ======
 knowledge_cf = {
     "Influenza": {"demam": 0.8, "batuk": 0.7, "pilek": 0.6},
@@ -131,7 +135,7 @@ detail = {
         "makanan_baik": "Sup, buah", 
         "makanan_hindari": "Gorengan",
         "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSas9pwpexBiA29P96fGTJ67eDpGrGgVbrFDA&s",
-        "peringatan": None # Tidak ada peringatan khusus
+        "peringatan": None 
     },
     "Tifus": {
         "penyebab": "Bakteri Salmonella typhi", 
@@ -200,7 +204,7 @@ def show_disease_detail(penyakit_nama):
         st.warning("Data detail tidak ditemukan.")
         return
 
-    # Tampilkan Peringatan Khusus jika ada (FITUR BARU 2)
+    # Tampilkan Peringatan Khusus jika ada
     if data.get("peringatan"):
         st.markdown(f"""
         <div class="alert-card">
@@ -282,7 +286,7 @@ with st.sidebar:
             
             st.markdown("---")
     else:
-        st.caption("Belum ada riwayat diagnosis.")
+        st.caption("Bagian riwayat kosong.")
 
 # ====== MODAL DETAIL ======
 if 'show_detail' in st.session_state and st.session_state.show_detail:
@@ -296,6 +300,14 @@ if 'show_detail' in st.session_state and st.session_state.show_detail:
     st.markdown("---")
 
 # ====== LAYOUT UTAMA ======
+# Kita menggunakan form atau pengelolaan state untuk handle "Clear" agar tampilan bersih saat tombol ditekan
+
+# Reset input jika flag clear aktif
+if st.session_state.clear_flag:
+    st.session_state.clear_flag = False
+    # Force rerun agar UI bersih
+    st.rerun()
+
 left, right = st.columns([2, 1])
 
 with left:
@@ -327,6 +339,7 @@ with left:
 
 # Membuat placeholder kosong
 hasil_placeholder = st.empty()
+
 
 # ====== PROSES LOGIC (UPDATED DENGAN CF USER) ======
 if diagnosa:
