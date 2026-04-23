@@ -340,6 +340,16 @@ with left:
 # Membuat placeholder kosong
 hasil_placeholder = st.empty()
 
+# ====== AKSI CLEAR (RESET SEMUA) ======
+if clear:
+    # Kosongkan tampilan hasil
+    hasil_placeholder.empty()
+    
+    # Bersihkan kolom kanan (placeholder khusus jika perlu, tapi karena hasil placeholder kosong, kolom kanan juga akan bersih secara logika script)
+    # Agar input juga ter-reset di mata user saat rerun:
+    st.session_state.clear_flag = True 
+    st.rerun()
+
 
 # ====== PROSES LOGIC (UPDATED DENGAN CF USER) ======
 if diagnosa:
